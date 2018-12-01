@@ -1,0 +1,42 @@
+---
+# Adapt with your message. You can use placeholders {{name}} and {{target_name}}
+message:
+  subject: Secret santa Dunder Mifflin - mission for you {{name}}
+  body:
+    - Ho ho ho! Hello {{name}}!
+    - I heard you were nice this year at Dunder Mifflin, so I think that you deserve a little something.
+    - I would have loved to take care of it myself but I'm a bit busy these days...
+    - Could you please find something to offer to {{target_name}}? The budget is $10.
+    - Thank you very much for your help <(:{)
+    - (this email has been sent automatically, each member of your team received their own)
+# Configure the members of your secret santa project
+elves:
+  -
+    name: Jim
+    email: jim.halpert@dunder-mifflin.com
+  -
+    name: Pam
+    email: pam.beesly@dunder-mifflin.com
+  -
+    name: Michael
+    email: michael.scott@dunder-mifflin.com
+  -
+    name: Dwight
+    email: dwight.schrute@dunder-mifflin.com
+  -
+    name: Angela
+    email: angela@dunder-mifflin.com
+# Mail is used under the hood, so args can differ as long as they match delivery_method args:
+# Mail.defaults do
+#   delivery_method [method], [args]
+# end
+# See https://github.com/mikel/mail/
+transport:
+  from: santa@dunder-mifflin.com
+  method: smtp
+  args:
+    address: smtp.something.fr
+    port: 1234
+    user_name: plop
+    password: foobar
+    enable_ssl: true
