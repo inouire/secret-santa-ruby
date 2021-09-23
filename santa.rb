@@ -8,11 +8,13 @@ require 'yaml'
 class Elf
   attr_accessor :name
   attr_accessor :email
+  attr_accessor :family
   attr_accessor :target
 
-  def initialize(name, email)
-    @name  = name
-    @email = email
+  def initialize(name, email, family = nil)
+    @name   = name
+    @email  = email
+    @family = family
   end
 
   def to_s
@@ -36,18 +38,24 @@ class SecretSantaCLI < Thor
 
     # Build elves list
     elves = config['elves'].map do |props|
-      Elf.new(props['name'], override_email || props['email'])
-    end.shuffle!
-    puts elves.size.to_s.yellow + " elves participate in the project"
+      Elf.new(props['name'], override_email || props['email'], props['family'])
+    end
 
-    # Attribute targets
-    elves.each_with_index do |elf, k|
-      if k < elves.size - 1
-        elf.target = elves[k+1]
-      else
-        elf.target = elves[0]
+    while is_invalid?(elves) do
+      puts "Shuffle..."
+      elves.shuffle!
+
+      # Attribute targets
+      elves.each_with_index do |elf, k|
+        if k < elves.size - 1
+          elf.target = elves[k+1]
+        else
+          elf.target = elves[0]
+        end
       end
     end
+
+    puts elves.size.to_s.yellow + " elves participate in the project"
 
     # Recap targets and ask for confirmation
     elves.each { |elf| puts elf.to_s }
@@ -80,6 +88,11 @@ class SecretSantaCLI < Thor
   end
 
   no_commands do
+    def is_invalid?(elves)
+      elves.any? { |e| e.target.nil? } ||
+        elves.any? { |e| e.target.family != nil && e.target.family == e.family }
+    end
+
     def build_email(elf, config)
       from_email = config.dig('transport', 'from')
 
