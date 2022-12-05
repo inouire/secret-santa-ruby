@@ -18,7 +18,7 @@ class Elf
   end
 
   def to_s
-    name.green + " --> " + target.name.green + " (mail will be sent to " + email.white.on_blue + ")"
+    name.green + " --> " + target.name.green + ", mail will be sent to " + email.white.on_blue
   end
 end
 
